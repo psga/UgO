@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"time"
 )
+
 type card struct {
 	color  string
 	number int8
@@ -16,8 +17,15 @@ type player struct {
 	name string
 	deck deck
 }
+
+// func (obj *player) Default() {
+// 	if obj.deck == nil {
+// 		obj.Name = "John Doe"
+// 	}
+// }
+
 type game struct {
-	id string
+	id      string
 	players []player
 }
 
@@ -37,9 +45,42 @@ type game struct {
 //	// deck mainDeck :=
 //}
 
-func generateGame(nplayers int) {  //Because only one deck per game needs to be generated.
+func generatePlayer(name string) player {
+
+	fmt.Println("Player " + name + " generated")
+	// var
+	var newPlayer player = player{name: name}
+	return newPlayer
+}
+
+func pickCard(azar float64, colorsNum []int8, numberCards int8, colors []string) card {
+
+	switch {
+	case azar < (float64(colorsNum[0]) / float64(numberCards)):
+		return card{"r", 1}
+	case azar < (float64(colorsNum[0]+colorsNum[1]) / float64(numberCards)):
+		return card{"y", 1}
+	case azar < (float64(colorsNum[0]+colorsNum[1]+colorsNum[2]) / float64(numberCards)):
+		colors[0] = "blue"
+		return card{"b", 1}
+	case azar < (float64(colorsNum[0]+colorsNum[1]+colorsNum[2]+colorsNum[3]) / float64(numberCards)):
+		colors[0] = "green" // ...
+		return card{"g", 1}
+	case azar < (float64(colorsNum[0]+colorsNum[1]+colorsNum[2]+colorsNum[3]+colorsNum[4]) / float64(numberCards)):
+		colors[0] = "black" // .
+		return card{"x", 1}
+	default:
+		return card{"nunca", 1}
+	}
+
+}
+
+func generateGame(nplayers int) {
+	//Because only one deck per game needs to be generated.
 	rand.Seed(time.Now().UnixNano())
-	game := game{id:"1",players: []player{}}
+	id := "1"
+	game := game{id: id}
+	fmt.Println("Game with id " + id + " started")
 
 	//for i := 0;i<nplayers;i++{
 	//	fmt.Println("whats your name player ",i+1)
@@ -47,16 +88,16 @@ func generateGame(nplayers int) {  //Because only one deck per game needs to be 
 	//	fmt.Scanln(&name)
 	//	game.players=append(game.players,player{name:name})
 	//}
-	game.players=[]player{player{name:"Julian"},player{name:"pablo"}}
-	fmt.Println(game)
+	game.players = []player{}
+	game.players = append(game.players, generatePlayer("Julian"))
+	game.players = append(game.players, generatePlayer("Pablo"))
 
-
-	// VARIABLRES
+	// Initial Deck variables to deal cards
 	numberCards := int8(108)
 	colors := []string{"r", "y", "b", "g", "x"}
 	colorsNum := []int8{25, 25, 25, 25, 8}
-	numbersR := []card{	card{"0", 1}, card{"1", 2}, card{"2", 3},card{"3", 4}, card{"4", 2}, card{"5", 2}, card{"6", 2},
-				card{"7", 2}, card{"8", 2}, card{"9", 2}, card{"turno", 2}, card{"or", 2}, card{"joder", 2}}
+	numbersR := []card{{"0", 1}, {"1", 2}, {"2", 3}, {"3", 4}, {"4", 2}, {"5", 2}, {"6", 2},
+		{"7", 2}, {"8", 2}, {"9", 2}, {"turno", 2}, {"or", 2}, {"joder", 2}}
 	numbersB := make([]card, len(numbersR))
 	numbersG := make([]card, len(numbersR))
 	numbersY := make([]card, len(numbersR))
@@ -64,26 +105,19 @@ func generateGame(nplayers int) {  //Because only one deck per game needs to be 
 	copy(numbersG, numbersR)
 	copy(numbersY, numbersR)
 
-	//Deal cards
-	for _,i := range game.players{
-		fmt.Println(i)
-		for i:=0;i<7;i++ {
-			Azar :=rand.Float64()
-			fmt.Println(Azar)
-			switch {
-			case Azar<(float64(colorsNum[0])/float64(numberCards)):
-				colors[0] = "red"
-				//fmt.Println(colors[0])
-				//fmt.Println(Azar)
+	//Deal cards for each player
+	for i := range game.players {
 
-
-
-			}
+		for c := 0; c < 7; c++ {
+			//Deal 7 cards for each player
+			azar := rand.Float64()
+			game.players[i].deck.cards = append(game.players[i].deck.cards, pickCard(azar, colorsNum, numberCards, colors))
 
 		}
 	}
-
-
+	fmt.Println("===== Game generated ======")
+	fmt.Println(game.players)
+	fmt.Println("===== ============== ======")
 
 	//drawCard()
 	// numbers = numbers
