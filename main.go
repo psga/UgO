@@ -18,6 +18,7 @@ type player struct {
 	deck deck
 }
 
+// Default set values
 // func (obj *player) Default() {
 // 	if obj.deck == nil {
 // 		obj.Name = "John Doe"
