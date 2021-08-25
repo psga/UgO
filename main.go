@@ -54,26 +54,34 @@ func generatePlayer(name string) player {
 	return newPlayer
 }
 
-func pickCard(azar float64, colorsNum []int8, numberCards int8, colors []string) card {
+func pickCardColor(azar float64, colorsNum []int8, numberCards int8, colors []string) string {
 
+	fmt.Println(numberCards)
 	switch {
 	case azar < (float64(colorsNum[0]) / float64(numberCards)):
-		return card{"r", 1}
+		return "r"
 	case azar < (float64(colorsNum[0]+colorsNum[1]) / float64(numberCards)):
-		return card{"y", 1}
+		return "y"
 	case azar < (float64(colorsNum[0]+colorsNum[1]+colorsNum[2]) / float64(numberCards)):
-		colors[0] = "blue"
-		return card{"b", 1}
+		return "b"
 	case azar < (float64(colorsNum[0]+colorsNum[1]+colorsNum[2]+colorsNum[3]) / float64(numberCards)):
 		colors[0] = "green" // ...
-		return card{"g", 1}
+		return "g"
 	case azar < (float64(colorsNum[0]+colorsNum[1]+colorsNum[2]+colorsNum[3]+colorsNum[4]) / float64(numberCards)):
-		colors[0] = "black" // .
-		return card{"x", 1}
+		return "x"
 	default:
-		return card{"nunca", 1}
+		return "neverland"
 	}
 
+}
+
+// This function should receive the number of cards based
+//on previous function call, "pickCardColor"
+func pickCardNumber(cardList []int8) int8 {
+
+	//Here pick card number
+
+	return int8(1)
 }
 
 func generateGame(nplayers int) {
@@ -97,14 +105,17 @@ func generateGame(nplayers int) {
 	numberCards := int8(108)
 	colors := []string{"r", "y", "b", "g", "x"}
 	colorsNum := []int8{25, 25, 25, 25, 8}
-	numbersR := []card{{"0", 1}, {"1", 2}, {"2", 3}, {"3", 4}, {"4", 2}, {"5", 2}, {"6", 2},
-		{"7", 2}, {"8", 2}, {"9", 2}, {"turno", 2}, {"or", 2}, {"joder", 2}}
-	numbersB := make([]card, len(numbersR))
-	numbersG := make([]card, len(numbersR))
-	numbersY := make([]card, len(numbersR))
-	copy(numbersB, numbersR)
-	copy(numbersG, numbersR)
-	copy(numbersY, numbersR)
+	// "0" = 1 Card
+	// "1-9" = 2 Cards
+	// "Turn, Reverse, +2" = 2 Cards
+
+	cardsRed := []int8{1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
+	cardsBlue := make([]int8, len(cardsRed))
+	cardsGreen := make([]int8, len(cardsRed))
+	cardsYellow := make([]int8, len(cardsRed))
+	copy(cardsBlue, cardsRed)
+	copy(cardsGreen, cardsRed)
+	copy(cardsYellow, cardsRed)
 
 	//Deal cards for each player
 	for i := range game.players {
@@ -112,7 +123,18 @@ func generateGame(nplayers int) {
 		for c := 0; c < 7; c++ {
 			//Deal 7 cards for each player
 			azar := rand.Float64()
-			game.players[i].deck.cards = append(game.players[i].deck.cards, pickCard(azar, colorsNum, numberCards, colors))
+			cardColor := pickCardColor(azar, colorsNum, numberCards, colors)
+
+			var cardNumber int8
+
+			switch {
+			case cardColor == "r":
+				cardNumber = pickCardNumber(cardsRed)
+			case cardColor == "b":
+				cardNumber = pickCardNumber(cardsBlue)
+			}
+
+			game.players[i].deck.cards = append(game.players[i].deck.cards, card{cardColor, cardNumber})
 
 		}
 	}
