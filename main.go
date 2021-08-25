@@ -77,9 +77,8 @@ func pickCardColor(azar float64, colorsNum []int8, numberCards int8, colors []st
 
 // This function should receive the number of cards based
 //on previous function call, "pickCardColor"
-func pickCardNumber(cardList []int8) int8 {
 
-	//Here pick card number
+func pickCardNumber(cardList []int8) int8 {
 
 	return int8(1)
 }
@@ -100,6 +99,7 @@ func generateGame(nplayers int) {
 	game.players = []player{}
 	game.players = append(game.players, generatePlayer("Julian"))
 	game.players = append(game.players, generatePlayer("Pablo"))
+	game.players = append(game.players, generatePlayer("Juan"))
 
 	// Initial Deck variables to deal cards
 	numberCards := int8(108)
@@ -124,15 +124,33 @@ func generateGame(nplayers int) {
 			//Deal 7 cards for each player
 			azar := rand.Float64()
 			cardColor := pickCardColor(azar, colorsNum, numberCards, colors)
+			numberCards--
 
 			var cardNumber int8
 
 			switch {
 			case cardColor == "r":
 				cardNumber = pickCardNumber(cardsRed)
+				colorsNum[0]--
 			case cardColor == "b":
 				cardNumber = pickCardNumber(cardsBlue)
+				colorsNum[1]--
+			case cardColor == "g":
+				cardNumber = pickCardNumber(cardsGreen)
+				colorsNum[2]--
+			case cardColor == "y":
+				cardNumber = pickCardNumber(cardsYellow)
+				colorsNum[3]--
+			case cardColor == "x":
+				cardNumber = pickCardNumber(cardsYellow)
+				colorsNum[4]--
 			}
+
+
+
+
+
+
 
 			game.players[i].deck.cards = append(game.players[i].deck.cards, card{cardColor, cardNumber})
 
@@ -142,6 +160,8 @@ func generateGame(nplayers int) {
 	fmt.Println(game.players)
 	fmt.Println("===== ============== ======")
 
+	fmt.Println(colorsNum)
+	fmt.Println("===== ============== ======")
 	//drawCard()
 	// numbers = numbers
 	// Rcards=Gcards=
