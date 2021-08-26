@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math/rand"
+	"net/http"
 	"time"
 
 	"ugo.com/functions"
@@ -123,6 +125,21 @@ func generateGame(nplayers int) {
 func main() {
 	generateGame(2)
 
-	// draw()
+	//Handle requests
+
+	fmt.Println("Now Listening on 8081")
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println(r.URL.Path)
+
+		p := "./client" + r.URL.Path
+		fmt.Println(p)
+		if p == "./client/" {
+			p = "./client/index.html"
+		}
+		http.ServeFile(w, r, p)
+	})
+
+	//Fatal is equivalent to Print() followed by a call to os.Exit(1).
+	log.Fatal(http.ListenAndServe(":8081", nil))
 
 }
