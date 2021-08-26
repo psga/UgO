@@ -17,34 +17,10 @@ type player struct {
 	name string
 	deck deck
 }
-
-// Default set values
-// func (obj *player) Default() {
-// 	if obj.deck == nil {
-// 		obj.Name = "John Doe"
-// 	}
-// }
-
 type game struct {
 	id      string
 	players []player
 }
-
-//func draw() {
-//	var mainDeck deck
-//
-//	for _, c := range []string{"r", "g", "y", "b"} {
-//		for _, n := range []int8{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, -10, -11, -2} {
-//			mainDeck.cards = append(mainDeck.cards, card{c, n})
-//		}
-//	}
-//	fmt.Println(mainDeck.cards)
-//	randomIndex := rand.Intn(len(mainDeck.cards))
-//	pick := mainDeck.cards[randomIndex]
-//	fmt.Println(pick)
-//
-//	// deck mainDeck :=
-//}
 
 func generatePlayer(name string) player {
 
@@ -54,42 +30,11 @@ func generatePlayer(name string) player {
 	return newPlayer
 }
 
-func pickCardColor(azar float64, colorsNum []int8, numberCards int8, colors []string) string {
-
-	fmt.Println(numberCards)
-	switch {
-	case azar < (float64(colorsNum[0]) / float64(numberCards)):
-		return "r"
-	case azar < (float64(colorsNum[0]+colorsNum[1]) / float64(numberCards)):
-		return "y"
-	case azar < (float64(colorsNum[0]+colorsNum[1]+colorsNum[2]) / float64(numberCards)):
-		return "b"
-	case azar < (float64(colorsNum[0]+colorsNum[1]+colorsNum[2]+colorsNum[3]) / float64(numberCards)):
-		colors[0] = "green" // ...
-		return "g"
-	case azar < (float64(colorsNum[0]+colorsNum[1]+colorsNum[2]+colorsNum[3]+colorsNum[4]) / float64(numberCards)):
-		return "x"
-	default:
-		return "neverland"
-	}
-
-}
-
-// This function should receive the number of cards based
-//on previous function call, "pickCardColor"
-
-func pickCardNumber(cardList []int8) int8 {
-
-	return int8(1)
-}
-
 func generateGame(nplayers int) {
-	//Because only one deck per game needs to be generated.
 	rand.Seed(time.Now().UnixNano())
 	id := "1"
 	game := game{id: id}
 	fmt.Println("Game with id " + id + " started")
-
 	//for i := 0;i<nplayers;i++{
 	//	fmt.Println("whats your name player ",i+1)
 	//	var name string
@@ -116,6 +61,7 @@ func generateGame(nplayers int) {
 	copy(cardsBlue, cardsRed)
 	copy(cardsGreen, cardsRed)
 	copy(cardsYellow, cardsRed)
+	cardsBlack := []int8{4,4}
 
 	//Deal cards for each player
 	for i := range game.players {
@@ -127,30 +73,31 @@ func generateGame(nplayers int) {
 			numberCards--
 
 			var cardNumber int8
+			azar = rand.Float64()
+			fmt.Println(cardColor)
 
 			switch {
 			case cardColor == "r":
-				cardNumber = pickCardNumber(cardsRed)
+				cardNumber = pickCardNumber(azar,cardsRed,colorsNum[0])
 				colorsNum[0]--
+				cardsRed[cardNumber]--
 			case cardColor == "b":
-				cardNumber = pickCardNumber(cardsBlue)
+				cardNumber = pickCardNumber(azar,cardsBlue,colorsNum[1])
 				colorsNum[1]--
+				cardsBlue[cardNumber]--
 			case cardColor == "g":
-				cardNumber = pickCardNumber(cardsGreen)
+				cardNumber = pickCardNumber(azar,cardsGreen,colorsNum[2])
 				colorsNum[2]--
+				cardsGreen[cardNumber]--
 			case cardColor == "y":
-				cardNumber = pickCardNumber(cardsYellow)
+				cardNumber = pickCardNumber(azar,cardsYellow,colorsNum[3])
 				colorsNum[3]--
+				cardsYellow[cardNumber]--
 			case cardColor == "x":
-				cardNumber = pickCardNumber(cardsYellow)
+				cardNumber = pickCardNumber(azar,cardsBlack,colorsNum[4])
 				colorsNum[4]--
+				cardsBlack[cardNumber]--
 			}
-
-
-
-
-
-
 
 			game.players[i].deck.cards = append(game.players[i].deck.cards, card{cardColor, cardNumber})
 
@@ -160,7 +107,7 @@ func generateGame(nplayers int) {
 	fmt.Println(game.players)
 	fmt.Println("===== ============== ======")
 
-	fmt.Println(colorsNum)
+	fmt.Println("Number of Cards of each color:",colorsNum)
 	fmt.Println("===== ============== ======")
 	//drawCard()
 	// numbers = numbers
