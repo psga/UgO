@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
+
+	"ugo.com/functions"
 )
 
 type card struct {
@@ -31,6 +33,7 @@ func generatePlayer(name string) player {
 }
 
 func generateGame(nplayers int) {
+
 	rand.Seed(time.Now().UnixNano())
 	id := "1"
 	game := game{id: id}
@@ -61,7 +64,7 @@ func generateGame(nplayers int) {
 	copy(cardsBlue, cardsRed)
 	copy(cardsGreen, cardsRed)
 	copy(cardsYellow, cardsRed)
-	cardsBlack := []int8{4,4}
+	cardsBlack := []int8{4, 4}
 
 	//Deal cards for each player
 	for i := range game.players {
@@ -69,7 +72,8 @@ func generateGame(nplayers int) {
 		for c := 0; c < 7; c++ {
 			//Deal 7 cards for each player
 			azar := rand.Float64()
-			cardColor := pickCardColor(azar, colorsNum, numberCards, colors)
+			cardColor := functions.PickCardColor(azar, colorsNum, numberCards, colors)
+			// cardColor := pickCardColor(azar, colorsNum, numberCards, colors)
 			numberCards--
 
 			var cardNumber int8
@@ -78,23 +82,23 @@ func generateGame(nplayers int) {
 
 			switch {
 			case cardColor == "r":
-				cardNumber = pickCardNumber(azar,cardsRed,colorsNum[0])
+				cardNumber = functions.PickCardNumber(azar, cardsRed, colorsNum[0])
 				colorsNum[0]--
 				cardsRed[cardNumber]--
 			case cardColor == "b":
-				cardNumber = pickCardNumber(azar,cardsBlue,colorsNum[1])
+				cardNumber = functions.PickCardNumber(azar, cardsBlue, colorsNum[1])
 				colorsNum[1]--
 				cardsBlue[cardNumber]--
 			case cardColor == "g":
-				cardNumber = pickCardNumber(azar,cardsGreen,colorsNum[2])
+				cardNumber = functions.PickCardNumber(azar, cardsGreen, colorsNum[2])
 				colorsNum[2]--
 				cardsGreen[cardNumber]--
 			case cardColor == "y":
-				cardNumber = pickCardNumber(azar,cardsYellow,colorsNum[3])
+				cardNumber = functions.PickCardNumber(azar, cardsYellow, colorsNum[3])
 				colorsNum[3]--
 				cardsYellow[cardNumber]--
 			case cardColor == "x":
-				cardNumber = pickCardNumber(azar,cardsBlack,colorsNum[4])
+				cardNumber = functions.PickCardNumber(azar, cardsBlack, colorsNum[4])
 				colorsNum[4]--
 				cardsBlack[cardNumber]--
 			}
@@ -107,7 +111,7 @@ func generateGame(nplayers int) {
 	fmt.Println(game.players)
 	fmt.Println("===== ============== ======")
 
-	fmt.Println("Number of Cards of each color:",colorsNum)
+	fmt.Println("Number of Cards of each color:", colorsNum)
 	fmt.Println("===== ============== ======")
 	//drawCard()
 	// numbers = numbers

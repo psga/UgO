@@ -1,6 +1,8 @@
-package main
+package functions
 
-func pickCardColor(azar float64, colorsNum []int8, numberCards int8, colors []string) string {
+//Las funciones y variables necesitan tener la primera letra
+//mayuscula para poder llamarlas en donde se importen
+func PickCardColor(azar float64, colorsNum []int8, numberCards int8, colors []string) string {
 
 	switch {
 	case azar < (float64(colorsNum[0]) / float64(numberCards)):
@@ -19,27 +21,28 @@ func pickCardColor(azar float64, colorsNum []int8, numberCards int8, colors []st
 	}
 
 }
+
 // This function should receive the number of cards based
 //on previous function call, "pickCardColor"
 
 //	cardslist := []int8{1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}
-func pickCardNumber(azar float64,cardList []int8,numberCards int8) int8 {
+func PickCardNumber(azar float64, cardList []int8, numberCards int8) int8 {
 	porcentages := []float64{}
-	for i,x := range cardList {
-		if i==0{
-		porcentages = append(porcentages,(float64(x)/float64(numberCards)))
-		}else{
-			porcentages = append(porcentages,(float64(x)/float64(numberCards))+float64(porcentages[len(porcentages)-1]))
+	for i, x := range cardList {
+		if i == 0 {
+			porcentages = append(porcentages, (float64(x) / float64(numberCards)))
+		} else {
+			porcentages = append(porcentages, (float64(x)/float64(numberCards))+float64(porcentages[len(porcentages)-1]))
 		}
 	}
 	//fmt.Println("porcentage of",porcentages)
 	//fmt.Println("azar",azar)
 
-	for i,x := range porcentages{
-		if azar<x{
+	for i, x := range porcentages {
+		if azar < x {
 			return int8(i)
 		}
 
 	}
-	return int8(len(porcentages)-1)
+	return int8(len(porcentages) - 1)
 }
