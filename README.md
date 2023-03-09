@@ -1,5 +1,5 @@
 # UgO
-Uno game in go
+Uno game in Go
 ```
 go run .
 ```
